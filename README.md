@@ -77,8 +77,6 @@ public void myFunction(ReflectDB reflectDB) {
   
   // Execute a native SQL query
   ResultSet rs = reflectDB.getNativeConnection().prepareStatement("SELECT * FROM PERSON WHERE ...").executeQuery();
-  // Even map it to objects. ;)
-  List<Person> people = reflectDB.mapResult(rs, Person.class);
     
 }
 ```
