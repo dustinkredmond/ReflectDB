@@ -66,5 +66,23 @@ public void myFunction(ReflectDB reflectDB) {
   reflectDB.insert(new Person(1, "John", "Smith", "")); // Insert a row into database
   Person p = reflectDB.fetchSingle("SELECT * FROM PEOPLE WHERE ID = 1", Person.class); // Query object from database
   System.out.println( p.getFirstName() );   // Prints queried Person's first name, "John"
+  
+  p.setFirstName("Dustin");
+  reflectDB.save(p);
+  // Updates changed fields in database
+  
+  // Fetch all Person from database and delete
+  reflectDB.fetchAll(Person.class).forEach(db::delete);
+  
+  
+  // Execute a native SQL query
+  ResultSet rs = reflectDB.getNativeConnection().prepareStatement("SELECT * FROM PERSON WHERE ...").executeQuery();
+  // Even map it to objects. ;)
+  List<Person> people = reflectDB.mapResult(rs, Person.class);
+    
 }
 ```
+
+---
+
+Please feel free to contribute to this repository, let me know if you have any questions!
