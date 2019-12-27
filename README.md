@@ -18,13 +18,39 @@ If the `ReflectDB` class doesn't provide a way for you to accomplish your goal, 
 ---
 # Getting Started
 
-## 1. Add ReflectDB's one dependency to pom.xml
+## 1a. Add ReflectDB's one dependency to pom.xml
 ```
   <dependency>
     <groupId>org.reflections</groupId>
     <artifactId>reflections</artifactId>
     <version>0.9.11</version>
+  </dependency>   
+```
+
+### 1b. Alternatively, get ReflectDB from our repository
+Simply add the below to your project's POM and no need to add the dependency from step 1a.
+```
+<repositories>
+        <repository>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>fail</checksumPolicy>
+            </releases>
+            <id>reflectdb</id>
+            <name>ReflectDB</name>
+            <url>https://gserve.org/maven2</url>
+            <layout>default</layout>
+        </repository>
+</repositories>
+    
+<dependencies>
+  <dependency>
+    <groupId>org.gserve</groupId>
+    <artifactId>reflectdb</artifactId>
+    <version>PICK_A_VERSION_TO_GO_HERE</version>
   </dependency>
+</dependencies>
 ```
 
 ## 2. Annotate POJO classes to model database tables.
