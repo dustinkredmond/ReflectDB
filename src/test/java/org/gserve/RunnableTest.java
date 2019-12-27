@@ -34,8 +34,7 @@ public class RunnableTest {
                     3306,
                     "org.gserve");
 
-
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         // Test API during development here.
     }
 }

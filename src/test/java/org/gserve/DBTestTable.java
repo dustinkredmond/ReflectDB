@@ -27,8 +27,8 @@ import org.gserve.annotations.ReflectDBTable;
  * Author: Dustin K. Redmond
  */
 @ReflectDBTable(tableName = "TEST_TABLE")
-@SuppressWarnings("unused")
-class DBTestTable {
+@SuppressWarnings({"unused","WeakerAccess"})
+public class DBTestTable {
 
     @ReflectDBField(fieldName = "id", fieldType = "INTEGER", notNull = true, primaryKey = true)
     private int id;
@@ -37,15 +37,15 @@ class DBTestTable {
     @ReflectDBField(fieldName = "age", fieldType = "INTEGER")
     private int age;
 
-    DBTestTable() { super(); }
-    DBTestTable(int id, String name, int age) { this.id = id; this.name = name; this.age = age; }
+    public DBTestTable() { super(); }
+    public DBTestTable(int id, String name, int age) { this.id = id; this.name = name; this.age = age; }
 
-    int getId() { return this.id; }
-    void setId(int id) { this.id = id; }
+    public int getId() { return this.id; }
+    public void setId(int id) { this.id = id; }
 
-    String getName() { return this.name; }
-    void setName(String name) { this.name = name; }
+    public String getName() { return this.name; }
+    public void setName(String name) { this.name = name; }
 
-    int getAge() { return this.age; }
-    void setAge(int age) { this.age = age; }
+    public int getAge() { return this.age; }
+    public void setAge(int age) { this.age = age; }
 }

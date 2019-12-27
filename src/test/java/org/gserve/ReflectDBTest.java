@@ -31,10 +31,11 @@ import java.sql.SQLException;
  * Created: 12/24/2019 08:11
  * Author: Dustin K. Redmond
  */
+@SuppressWarnings({"SqlResolve", "unused", "SqlNoDataSourceInspection"})
 public class ReflectDBTest {
 
     private static final ReflectDB db = ReflectDB.initialize(
-            new ReflectDBConfig("jdbc:sqlite:TEST_DB.db",
+            new ReflectDBConfig("jdbc:sqlite:Database.db",
                     "TEST_DB",
                     "",
                     "",
@@ -44,6 +45,8 @@ public class ReflectDBTest {
     @Test
     public void testA() {
         assert (db.getConfig() != null);
+        // Since we'll be doing inserts with ID, need to drop.
+        db.dropTable(DBTestTable.class);
     }
 
     @Test
@@ -66,6 +69,7 @@ public class ReflectDBTest {
     public void testD() {
         final String sql = "INSERT INTO TEST_TABLE (id, name, age) VALUES (1,'John','18')";
         try (Connection conn = db.getNativeConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            db.createTablesIfNotExists();
             assert (ps.executeUpdate() > 0);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -77,6 +81,7 @@ public class ReflectDBTest {
     public void testE() {
         final String sql = "SELECT * FROM TEST_TABLE WHERE id = 1";
         try (Connection conn = db.getNativeConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            db.createTablesIfNotExists();
             ResultSet rs = ps.executeQuery();
             rs.next();
             assertEquals(rs.getString("name").toUpperCase(), "JOHN");
@@ -89,6 +94,7 @@ public class ReflectDBTest {
     public void testF() {
         final String sql = "DELETE FROM TEST_TABLE WHERE id = 1";
         try (Connection conn = db.getNativeConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            db.createTablesIfNotExists();
             assertEquals(ps.executeUpdate(), 1);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -97,13 +103,15 @@ public class ReflectDBTest {
     }
 
     @Test
-    public void testG() {
+    public void testG() throws SQLException {
+        db.createTablesIfNotExists();
         assert db.insert(new DBTestTable(1, "Dustin", 26));
     }
 
     @Test
     public void testH() {
-        assert db.delete(db.fetch("SELECT * FROM TEST_TABLE WHERE ID = 1", DBTestTable.class));
+        DBTestTable test = db.fetchSingle("SELECT * FROM TEST_TABLE WHERE ID = 1", DBTestTable.class);
+        assert(db.delete(test));
     }
 
     @Test
@@ -111,9 +119,9 @@ public class ReflectDBTest {
         db.insert(new DBTestTable(1, "Dustin", 27));
         DBTestTable test = db.fetchSingle("SELECT * FROM TEST_TABLE WHERE ID = 1", DBTestTable.class);
         test.setAge(26);
-        db.save(test);
-        test = db.fetchSingle("SELECT * FROM TEST_TABLE WHERE ID = 1", DBTestTable.class);
-        assertEquals(test.getAge(), 26);
+        assert(db.save(test));
+        DBTestTable test2 = db.fetchSingle("SELECT * FROM TEST_TABLE WHERE ID = 1", DBTestTable.class);
+        assertEquals(test2.getAge(), 26);
     }
 
 }
