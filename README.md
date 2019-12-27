@@ -70,8 +70,10 @@ public class Person {
   @ReflectDBField(fieldName = "ALTERNATE_NAME")
   private String altName;
   
+  // You MUST have a constructor that takes no arguments, e.g.
+  public Person() { super(); }
+  
   // getters & setters below
-
 }
 ```
 
