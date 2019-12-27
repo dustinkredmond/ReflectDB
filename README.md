@@ -85,7 +85,7 @@ public void myFunction(ReflectDB reflectDB) {
 ### 4. Recap
 1. Instantiate `ReflectDB`
 2. Call `ReflectDB.initialize(config)`
-3. Call `ReflectDB.createTablesIfNotExists();
+3. Call `ReflectDB.createTablesIfNotExists();`
 4. Happy developing! Call `ReflectDB` methods to make life simpler.
 ---
 
