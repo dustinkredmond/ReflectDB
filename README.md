@@ -1,7 +1,7 @@
 # ReflectDB
 Lightweight tool to provide ORM and facilitate quick table creation using straightforward annotations.
 
-ReflectDB is a simple library that mimics some of the nifty functionalities of larger, well-known frameworks without all of the bulk and mountain of dependencies.
+ReflectDB is a simple library that mimics some of the nifty functionalities of larger, well-known frameworks without all of the bulk and mountain of dependencies. We have only a single dependency (https://github.com/ronmamo/reflections/), and only for one method call at that!
 
 Reflect DB includes features like:
 1. Object Relational Mapping (ORM)
@@ -9,10 +9,11 @@ Reflect DB includes features like:
 3. Automatic table creation (via Java Annotations)
 4. Simple (pure Java) configuration
 5. Generics e.g. `ReflectDB.fetchSingle("SELECT * FROM PEOPLE WHERE ID = 1", Person.class)` returns an instance of `Person`
+6. Convenience queries `ReflectDB.fetchAll(MyDomainObject.class);` returns an entire table of objects.
 
-To see examples of how to use ReflectDB, you can check out some of our examples in the `ReflectDBTest` class, which is where all of our unit tests are written. The beauty of ReflectDB is that nearly 100% of the API can be accessed by static or instance methods of the `org.gserve.ReflectDB` class, so there shouldn't need to be much hunting for how to do something.
+To see examples of how to use ReflectDB, you can check out some of our examples in the `ReflectDBTest` class, which is where all of our unit tests are written. The beauty of ReflectDB is that nearly 100% of the API can be accessed by static or instance methods of the `org.gserve.ReflectDB` class.
 
-If the `ReflectDB` class doesn't provide a way for you to accomplish your goal, please open a new issue on GitHub, and we'll take a look at implementing this. Although, keep in mind that ReflectDB is meant to be lightweight; it is not intended to be a replacement for enterprise ORM framworks that are currently available today.
+If the `ReflectDB` class doesn't provide a way for you to accomplish your goal, please open a new issue on GitHub, and we'll take a look at implementing this. Although, keep in mind that ReflectDB is meant to be lightweight; it is not intended to be a replacement for enterprise ORM frameworks that are already available.
 
 ---
 # Getting Started
@@ -72,17 +73,20 @@ public void myFunction(ReflectDB reflectDB) {
   // Updates changed fields in database
   
   // Fetch all Person from database and delete
-  reflectDB.fetchAll(Person.class).forEach(db::delete);
+  reflectDB.fetchAll(Person.class).forEach(reflectDB::delete);
   
   
   // Execute a native SQL query
   ResultSet rs = reflectDB.getNativeConnection().prepareStatement("SELECT * FROM PERSON WHERE ...").executeQuery();
-  // Even map it to objects. ;)
-  List<Person> people = reflectDB.mapResult(rs, Person.class);
     
 }
 ```
 
+### 4. Recap
+1. Instantiate `ReflectDB`
+2. Call `ReflectDB.initialize(config)`
+3. Call `ReflectDB.createTablesIfNotExists();`
+4. Happy developing! Call `ReflectDB` methods to make life simpler.
 ---
 
 Please feel free to contribute to this repository, let me know if you have any questions!
