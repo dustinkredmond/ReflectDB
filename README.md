@@ -73,7 +73,7 @@ public void myFunction(ReflectDB reflectDB) {
   // Updates changed fields in database
   
   // Fetch all Person from database and delete
-  reflectDB.fetchAll(Person.class).forEach(db::delete);
+  reflectDB.fetchAll(Person.class).forEach(reflectDB::delete);
   
   
   // Execute a native SQL query
