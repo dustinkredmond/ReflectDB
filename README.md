@@ -18,7 +18,16 @@ If the `ReflectDB` class doesn't provide a way for you to accomplish your goal, 
 ---
 # Getting Started
 
-## 1. Annotate POJO classes to model database tables.
+## 1. Add ReflectDB's one dependency to pom.xml
+```
+  <dependency>
+    <groupId>org.reflections</groupId>
+    <artifactId>reflections</artifactId>
+    <version>0.9.11</version>
+  </dependency>
+```
+
+## 2. Annotate POJO classes to model database tables.
 
 ```
 import org.gserve.annotations.*;
@@ -40,7 +49,7 @@ public class Person {
 }
 ```
 
-## 2. Create and configure an instance of `ReflectDB`
+## 3. Create and configure an instance of `ReflectDB`
 
 ```
 import org.gserve.ReflectDB;
@@ -59,7 +68,7 @@ public class TestReflectDB {
 }
 ```
 
-## 3. Almost all functionality is available from `ReflectDB` instance
+## 4. Almost all functionality is available from `ReflectDB` instance
 
 ```
 public void myFunction(ReflectDB reflectDB) {
@@ -82,7 +91,7 @@ public void myFunction(ReflectDB reflectDB) {
 }
 ```
 
-### 4. Recap
+### 5. Recap
 1. Instantiate `ReflectDB`
 2. Call `ReflectDB.initialize(config)`
 3. Call `ReflectDB.createTablesIfNotExists();`
