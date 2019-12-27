@@ -176,8 +176,7 @@ public class ReflectDB {
         try {
             return new ReflectDBQuery().save(obj);
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            throw new ReflectDBException(e);
         }
     }
 

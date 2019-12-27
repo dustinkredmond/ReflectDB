@@ -154,9 +154,9 @@ public class ReflectDBQuery {
             throw new ReflectDBException(
                     String.format("ReflectDB requires one primary key per table, found: %d keys for table: %s",
                             numPrimaryKey, tableName));
+        } else {
+            return DB.getNativeConnection().prepareStatement(query.toString()).executeUpdate() > 0;
         }
-        System.out.println(query.toString());
-        return false;
     }
 
     public boolean delete(Object obj) {
