@@ -28,7 +28,7 @@ If the `ReflectDB` class doesn't provide a way for you to accomplish your goal, 
 ```
 
 ### 1b. Alternatively, get ReflectDB from our repository
-Simply add the below to your project's POM and no need to add the dependency from step 1a.
+Simply add the below to your project's POM and there's no need to add the dependency from step 1a.
 ```
 <repositories>
         <repository>
