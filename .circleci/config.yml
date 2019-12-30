@@ -37,7 +37,9 @@ jobs:
             - "d7:f8:a5:34:85:cd:f7:28:c1:3f:2c:ef:a5:98:42:d3"
       - run:
           name: Deploy to remote server
-          command: rsync -avz --delete /home/circleci/repo/target/ReflectDB/ReflectDB.jar ${SSH_USER}@${SSH_HOSTNAME}:${DEPLOY_PATH}
+          command: |
+            echo 'SHA256:W3Lmy5HGv4v+s0TVnRASuq1BF9uw9JkmsFVEDv0BpKg' >> ~/.ssh/known_hosts
+            rsync -avz --delete /home/circleci/repo/target/ReflectDB/ReflectDB.jar ${SSH_USER}@${SSH_HOSTNAME}:${DEPLOY_PATH}
 
       - save_cache:
           paths:
