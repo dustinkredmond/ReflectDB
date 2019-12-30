@@ -1,9 +1,2 @@
 language: java
-jdk:
-  - openjdk11
-  - openjdk13
-os:
-  - linux
-  notifications:
-  email:
-    - dustin@dustinredmond.com
+jdk: oraclejdk11
