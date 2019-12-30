@@ -4,3 +4,6 @@ jdk:
   - openjdk13
 os:
   - linux
+  notifications:
+  email:
+    - dustin@dustinredmond.com
