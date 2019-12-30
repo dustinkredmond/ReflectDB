@@ -1,7 +1,5 @@
 # ReflectDB
 
-[![Build Status](https://travis-ci.com/dustinkredmond/ReflectDB.svg?branch=master)](https://travis-ci.com/dustinkredmond/ReflectDB)
-
 Lightweight tool to provide ORM and facilitate quick table creation using straightforward annotations.
 
 ReflectDB is a simple library that mimics some of the nifty functionalities of larger, well-known frameworks without all of the bulk and mountain of dependencies. We have only a single dependency (https://github.com/ronmamo/reflections/), and only for one method call at that!
