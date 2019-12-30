@@ -29,7 +29,7 @@ jobs:
       - run: mvn dependency:go-offline
       - run: mvn package
       - store_artifacts: # store the jar as artifact
-          path: target/ReflectDB.jar
+          path: target/ReflectDB/ReflectDB.jar
 
       - save_cache:
           paths:
