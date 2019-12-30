@@ -56,6 +56,12 @@ Simply add the below to your project's POM and there's no need to add the depend
 </dependencies>
 ```
 
+### 1c. Alternatively...
+
+If you don't use Maven to build, and you don't want to compile from source, binaries are available
+on our website for you to include in your project. Simply visit https://www.gserve.org/reflectdb and 
+choose the appropriate version.
+
 ## 2. Annotate POJO classes to model database tables.
 
 ```
