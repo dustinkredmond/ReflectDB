@@ -33,7 +33,7 @@ jobs:
       - run:
         name: Deploy to remote server
         command: |
-         rsync -avz --delete /home/circleci/repo/target/ReflectDB/ReflectDB.jar ${SSH_USER}@${SSH_HOSTNAME}:${DEPLOY_PATH}
+         - rsync -avz --delete /home/circleci/repo/target/ReflectDB/ReflectDB.jar ${SSH_USER}@${SSH_HOSTNAME}:${DEPLOY_PATH}
 
       - save_cache:
           paths:
