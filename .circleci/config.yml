@@ -30,8 +30,11 @@ jobs:
       - store_artifacts: # store the jar as artifact
           path: target/ReflectDB/ReflectDB.jar
       - run:
+          name: Update repos
+          command: sudo apt update
+      - run:
           name: Install rsync
-          command: sudo apt update sudo apt install rsync
+          command: sudo apt install rsync
       - run:
           name: Deploy to remote server
           command: rsync -avz --delete /home/circleci/repo/target/ReflectDB/ReflectDB.jar ${SSH_USER}@${SSH_HOSTNAME}:${DEPLOY_PATH}
