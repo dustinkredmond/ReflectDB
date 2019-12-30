@@ -1,48 +1,23 @@
-# Java Maven CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-java/ for more details
-#
+# Circle CI configuration file
 version: 2
 jobs:
   build:
     docker:
-      # specify the version you desire here
       - image: circleci/openjdk:11-jdk
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
     working_directory: ~/repo
-
     environment:
       MAVEN_OPTS: -Xmx3200m
-
     steps:
       - checkout
-      # Download and cache dependencies
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "pom.xml" }}
             - v1-dependencies-
-
       - run: mvn dependency:go-offline
       - run: mvn package
-      - store_artifacts: # store the jar as artifact
+      - store_artifacts:
           path: target/ReflectDB/ReflectDB.jar
-      - run:
-          name: Install rsync
-          command: sudo apt install rsync
-      - add_ssh_keys:
-          fingerprints:
-            - "d7:f8:a5:34:85:cd:f7:28:c1:3f:2c:ef:a5:98:42:d3"
-      - run:
-          name: Deploy to remote server
-          command: |
-            rsync -avze --delete ssh -o StrictHostKeyChecking=no /home/circleci/repo/target/ReflectDB/ReflectDB.jar ${SSH_USER}@${SSH_HOSTNAME}:${DEPLOY_PATH}
-
       - save_cache:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
-
-      - run: mvn integration-test
