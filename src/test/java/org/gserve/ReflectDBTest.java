@@ -18,24 +18,29 @@ package org.gserve;
  *
  */
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 /**
  * Junit tests using local SQLite database.
- * Created: 12/24/2019 08:11
- * Author: Dustin K. Redmond
+ * @since 12/24/2019 08:11
+ * @author Dustin K. Redmond
  */
-@SuppressWarnings({"SqlResolve", "unused", "SqlNoDataSourceInspection"})
+@SuppressWarnings({"unused"})
 public class ReflectDBTest {
 
     private static final ReflectDB db = ReflectDB.initialize(
-            new ReflectDBConfig("jdbc:sqlite:Database.db",
+            new ReflectDBConfig("jdbc:sqlite:TEST_DATABASE.db",
                     "TEST_DB",
                     "",
                     "",
@@ -124,4 +129,15 @@ public class ReflectDBTest {
         assertEquals(test2.getAge(), 26);
     }
 
+    @AfterAll
+    static void tearDown() {
+        try {
+            assertTrue(Files.deleteIfExists(Paths.get("TEST_DATABASE.db")),
+                    "Unable to remove TEST_DATABASE, java.sql.Connection " +
+                            "objects have not been closed.");
+        } catch (IOException e) {
+            fail(String.format("Failed with (%s), this may mean that a java.sql.Connection" +
+                    "was not properly closed. TEST_DATABASE not removed.\n", e.getMessage()));
+        }
+    }
 }
