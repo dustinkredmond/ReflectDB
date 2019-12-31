@@ -90,7 +90,7 @@ public class ReflectDBConfig {
         this.modelPackage = modelPackage;
     }
 
-    boolean isSqlite() {
+    public boolean isSqlite() {
         return this.url.toUpperCase().contains("SQLITE");
     }
 }
