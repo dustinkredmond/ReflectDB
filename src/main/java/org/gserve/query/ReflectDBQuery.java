@@ -40,8 +40,8 @@ public class ReflectDBQuery {
     public <T> T fetchSingle(String sql, Class<T> modelClass) {
         try (Connection conn = DB.getNativeConnection(); PreparedStatement ps = conn.prepareStatement(sql+=" LIMIT 1")) {
             ResultSet rs = ps.executeQuery();
-            // SQLite complains about cursor being before first row.
-            if (DB.getConfig().isSqlite()) {
+            if (rs.getType() == rs.TYPE_FORWARD_ONLY && rs.isBeforeFirst()) {
+                // Must advance ResultSet if it's before first row.
                 rs.next();
             }
             T obj = modelClass.getConstructor().newInstance();
