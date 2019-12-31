@@ -158,7 +158,9 @@ public class ReflectDBQuery {
                     String.format("ReflectDB requires one primary key per table, found: %d keys for table: %s",
                             numPrimaryKey, tableName));
         } else {
-            return DB.getNativeConnection().prepareStatement(query.toString()).executeUpdate() > 0;
+            try (Connection conn = DB.getNativeConnection(); PreparedStatement pstmt = conn.prepareStatement(query.toString())) {
+                return pstmt.executeUpdate() > 0;
+            }
         }
     }
 
@@ -180,8 +182,8 @@ public class ReflectDBQuery {
             }
         }
         if (numPrimaryKey == 1) {
-            try {
-                return DB.getNativeConnection().prepareStatement(sb.toString()).executeUpdate() > 0;
+            try (Connection conn = DB.getNativeConnection(); PreparedStatement pstmt = conn.prepareStatement(sb.toString())) {
+                return pstmt.executeUpdate() > 0;
             } catch (Exception e) {
                 throw new ReflectDBException(String.format("%s.delete yielded SQL: %s, which raised an exception.",
                         getClass().getName(), sb.toString()), e);
