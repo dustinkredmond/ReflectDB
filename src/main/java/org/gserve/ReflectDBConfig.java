@@ -93,4 +93,6 @@ public class ReflectDBConfig {
     public boolean isSqlite() {
         return this.url.toUpperCase().contains("SQLITE");
     }
+    public boolean isMySql() { return this.url.toUpperCase().contains("MYSQL"); }
+    public boolean isMariaDB() { return this.url.toUpperCase().contains("MARIADB"); }
 }
