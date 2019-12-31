@@ -93,6 +93,11 @@ public class ReflectDB {
      */
     public void createTablesIfNotExists() throws SQLException {
         for (String sql : getTableCreateDDL().split(";")) {
+            if (sql.isEmpty() || (sql.trim().isEmpty())) {
+                // SQLException occurs if attempting to execute empty query
+                // throws error code 1065
+                continue;
+            }
             try (Connection conn = getNativeConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.executeUpdate();
             } catch (SQLException e) {
