@@ -1,4 +1,4 @@
-package org.gserve;
+package org.gserve.reflectdb;
 /*
  *  Copyright (C) 2019 Dustin K. Redmond
  *
@@ -18,10 +18,10 @@ package org.gserve;
  *
  */
 
-import org.gserve.exception.ReflectDBException;
-import org.gserve.model.ReflectDBColumn;
-import org.gserve.model.ReflectDBTable;
-import org.gserve.query.ReflectDBQuery;
+import org.gserve.reflectdb.exception.ReflectDBException;
+import org.gserve.reflectdb.model.ReflectDBColumn;
+import org.gserve.reflectdb.model.ReflectDBTable;
+import org.gserve.reflectdb.query.ReflectDBQuery;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -33,7 +33,7 @@ import java.util.List;
  * @since  12/24/2019 08:11
  * @author Dustin K. Redmond
  */
-@SuppressWarnings({"unused", "WeakerAccess"})
+@SuppressWarnings("unused")
 public class ReflectDB {
     private static ReflectDBConfig config = null;
 
@@ -201,7 +201,7 @@ public class ReflectDB {
      * @param <T> The ReflectDB type.
      */
     public <T> void dropTable(Class<T> modelClass) {
-        org.gserve.annotations.ReflectDBTable table = modelClass.getAnnotation(org.gserve.annotations.ReflectDBTable.class);
+        org.gserve.reflectdb.annotations.ReflectDBTable table = modelClass.getAnnotation(org.gserve.reflectdb.annotations.ReflectDBTable.class);
         if (table == null || table.tableName().isEmpty()) {
             throw new ReflectDBException("Unable to issue DROP command on a class that " +
                     "does not contain ReflectDBTable annotation or that does not specify " +

@@ -1,4 +1,4 @@
-package org.gserve.query;
+package org.gserve.reflectdb.query;
 /*
  *  Copyright (C) 2019 Dustin K. Redmond
  *
@@ -18,7 +18,7 @@ package org.gserve.query;
  *
  */
 
-import org.gserve.annotations.ReflectDBField;
+import org.gserve.reflectdb.annotations.ReflectDBField;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;

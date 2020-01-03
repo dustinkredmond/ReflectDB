@@ -1,4 +1,4 @@
-package org.gserve.model;
+package org.gserve.reflectdb.model;
 /*
  *  Copyright (C) 2019 Dustin K. Redmond
  *
@@ -18,8 +18,8 @@ package org.gserve.model;
  *
  */
 
-import org.gserve.ReflectDB;
-import org.gserve.annotations.ReflectDBField;
+import org.gserve.reflectdb.ReflectDB;
+import org.gserve.reflectdb.annotations.ReflectDBField;
 import org.reflections.Reflections;
 
 import java.lang.reflect.Field;
@@ -48,8 +48,8 @@ public class ReflectDBTable {
 
         // You found it right here, ReflectDB's only use of the org.reflections:reflections dependency
         Reflections ref = new Reflections(ReflectDB.getInstance().getConfig().getModelPackage());
-        for (Class<?> cl : ref.getTypesAnnotatedWith(org.gserve.annotations.ReflectDBTable.class)) {
-            org.gserve.annotations.ReflectDBTable reflectDBTable = cl.getAnnotation(org.gserve.annotations.ReflectDBTable.class);
+        for (Class<?> cl : ref.getTypesAnnotatedWith(org.gserve.reflectdb.annotations.ReflectDBTable.class)) {
+            org.gserve.reflectdb.annotations.ReflectDBTable reflectDBTable = cl.getAnnotation(org.gserve.reflectdb.annotations.ReflectDBTable.class);
             tables.add(new ReflectDBTable(reflectDBTable.tableName(), getColumnsFromTableBean(cl.getDeclaredFields())));
         }
         return tables;

@@ -1,4 +1,4 @@
-package org.gserve.annotations;
+package org.gserve.reflectdb.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -12,5 +12,5 @@ public @interface ReflectDBTable {
      * The name of the database table with which to associate this type.
      * @return The name of the table as it appears in the database.
      */
-    public String tableName() default "";
+    String tableName() default "";
 }

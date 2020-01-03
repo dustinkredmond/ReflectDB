@@ -18,8 +18,8 @@ package org.gserve;
  *
  */
 
-import org.gserve.annotations.ReflectDBField;
-import org.gserve.annotations.ReflectDBTable;
+import org.gserve.reflectdb.annotations.ReflectDBField;
+import org.gserve.reflectdb.annotations.ReflectDBTable;
 
 /**
  * Dummy table to use when testing.

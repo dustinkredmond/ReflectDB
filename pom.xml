@@ -106,7 +106,7 @@
                             <manifest>
                                 <addClasspath>true</addClasspath>
                                 <classpathPrefix>lib</classpathPrefix>
-                                <mainClass>org.gserve.ReflectDB</mainClass>
+                                <mainClass>org.gserve.reflectdb.ReflectDB</mainClass>
                             </manifest>
                             <manifestEntries>
                                 <Class-Path>.</Class-Path>

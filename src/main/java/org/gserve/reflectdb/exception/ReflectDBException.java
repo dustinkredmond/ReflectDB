@@ -1,4 +1,4 @@
-package org.gserve.exception;
+package org.gserve.reflectdb.exception;
 /*
  *  Copyright (C) 2019 Dustin K. Redmond
  *

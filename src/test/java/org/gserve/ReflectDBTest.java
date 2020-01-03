@@ -18,6 +18,8 @@ package org.gserve;
  *
  */
 
+import org.gserve.reflectdb.ReflectDB;
+import org.gserve.reflectdb.ReflectDBConfig;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 

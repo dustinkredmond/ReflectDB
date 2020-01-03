@@ -1,4 +1,4 @@
-package org.gserve;
+package org.gserve.reflectdb;
 /*
  *  Copyright (C) 2019 Dustin K. Redmond
  *

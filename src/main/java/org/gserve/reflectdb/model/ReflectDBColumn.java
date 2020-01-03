@@ -1,4 +1,4 @@
-package org.gserve.model;
+package org.gserve.reflectdb.model;
 /*
  *  Copyright (C) 2019 Dustin K. Redmond
  *

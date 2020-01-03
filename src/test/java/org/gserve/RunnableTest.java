@@ -18,6 +18,8 @@ package org.gserve;
  *
  */
 
+import org.gserve.reflectdb.ReflectDBConfig;
+
 /**
  * Dummy class used during development. Tests can be run here, but
  * mainly use it to play around with the API.

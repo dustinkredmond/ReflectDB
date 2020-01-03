@@ -14,7 +14,7 @@ Reflect DB includes features like:
 5. Generics e.g. `ReflectDB.fetchSingle("SELECT * FROM PEOPLE WHERE ID = 1", Person.class)` returns an instance of `Person`
 6. Convenience queries `ReflectDB.fetchAll(MyDomainObject.class);` returns an entire table of objects.
 
-To see examples of how to use ReflectDB, you can check out some of our examples in the `ReflectDBTest` class, which is where all of our unit tests are written. The beauty of ReflectDB is that nearly 100% of the API can be accessed by static or instance methods of the `org.gserve.ReflectDB` class.
+To see examples of how to use ReflectDB, you can check out some of our examples in the `ReflectDBTest` class, which is where all of our unit tests are written. The beauty of ReflectDB is that nearly 100% of the API can be accessed by static or instance methods of the `org.gserve.reflectdb.ReflectDB` class.
 
 If the `ReflectDB` class doesn't provide a way for you to accomplish your goal, please open a new issue on GitHub, and we'll take a look at implementing this. Although, keep in mind that ReflectDB is meant to be lightweight; it is not intended to be a replacement for enterprise ORM frameworks that are already available.
 
@@ -65,7 +65,7 @@ choose the appropriate version.
 ## 2. Annotate POJO classes to model database tables.
 
 ```
-import org.gserve.annotations.*;
+import org.gserve.reflectdb.annotations.*;
 
 @ReflectDBTable(tableName = "PEOPLE")
 public class Person {
@@ -89,7 +89,7 @@ public class Person {
 ## 3. Create and configure an instance of `ReflectDB`
 
 ```
-import org.gserve.ReflectDB;
+import org.gserve.reflectdb.ReflectDB;
 
 public class TestReflectDB {
   private static final ReflectDBConfig CONFIG = new ReflectDBConfig(
