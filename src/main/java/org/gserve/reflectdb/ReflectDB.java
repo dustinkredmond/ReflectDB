@@ -252,4 +252,13 @@ public class ReflectDB {
     public <T> List<T> fetchAll(Class<T> modelClass) {
         return new ReflectDBQuery().fetchAll(modelClass);
     }
+
+    /**
+     * Returns a list of entities in a ReflectDB table with a specified limit.
+     * @param modelClass The ReflectDB table to query.
+     * @param limit The limit of records to fetch.
+     * @param <T> The ReflectDB type.
+     * @return List of objects in the table.
+     */
+    public <T> List<T> fetch(Class<T> modelClass, int limit) { return new ReflectDBQuery().fetchAll(modelClass, limit); }
 }

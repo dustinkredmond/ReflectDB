@@ -42,7 +42,9 @@ public class ReflectDBQuery {
             ResultSet rs = ps.executeQuery();
             if (rs.getType() == rs.TYPE_FORWARD_ONLY && rs.isBeforeFirst()) {
                 // Must advance ResultSet if it's before first row.
-                rs.next();
+                if (!rs.next()) {
+                    return null;
+                }
             }
             T obj = modelClass.getConstructor().newInstance();
             for (Map.Entry<String, String> entry : MAPPING.getFieldColumnMap(modelClass).entrySet()) {
@@ -53,8 +55,13 @@ public class ReflectDBQuery {
                 f.set(obj, rs.getObject(dbColumn));
             }
             return obj;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new ReflectDBException(String.format("Exception occurred in query: %s", sql), e);
+        } catch (NoSuchMethodException e) {
+            throw new ReflectDBException(String.format("Model Class: %s must declare a no-argument constructor." +
+                    " E.g. public MyClassName() { super(); }", modelClass.getName()));
+        } catch (Exception e) {
+            throw new UnsupportedOperationException(e);
         }
     }
 
@@ -91,7 +98,6 @@ public class ReflectDBQuery {
         StringJoiner values = new StringJoiner(", ");
         for (Map.Entry<String,String> entry: MAPPING.getFieldColumnMap(obj.getClass()).entrySet()) {
             columnNames.add(entry.getValue());
-
             try {
                 Field f = obj.getClass().getDeclaredField(entry.getKey());
                 f.setAccessible(true);
@@ -101,7 +107,7 @@ public class ReflectDBQuery {
                     values.add("\"" + f.get(obj).toString() + "\"");
                 }
             } catch (NoSuchFieldException | IllegalAccessException e) {
-                throw new ReflectDBException("Exception occurred in reflectively assigning field values.", e);
+                throw new ReflectDBException(e);
             }
         }
         query.append(columnNames.toString()).append(") VALUES (").append(values.toString()).append(");");
@@ -129,7 +135,7 @@ public class ReflectDBQuery {
         for (Map.Entry<String,String> entry: MAPPING.getFieldColumnMap(obj.getClass()).entrySet()) {
             Field f = obj.getClass().getDeclaredField(entry.getKey());
             f.setAccessible(true);
-            if (NUM_TYPE.contains(f.getAnnotation(ReflectDBField.class).fieldType())) {
+            if (isNumericType(f.getAnnotation(ReflectDBField.class).fieldType())) {
                 values.add(entry.getValue() + " = " + f.get(obj).toString());
             } else {
                 values.add(entry.getValue() + " = \"" + f.get(obj).toString() + "\"");
@@ -141,7 +147,7 @@ public class ReflectDBQuery {
         for (Field field : obj.getClass().getDeclaredFields()) {
             if (field.getAnnotation(ReflectDBField.class).primaryKey()) {
                 numPrimaryKey++;
-                if (!NUM_TYPE.contains(field.getAnnotation(ReflectDBField.class).fieldType())) {
+                if (!isNumericType(field.getAnnotation(ReflectDBField.class).fieldType())) {
                     throw new ReflectDBException(String.format("Field: %s declared as primary key," +
                             " but field is not a numeric type. ReflectDB requires a numeric type.", field.getName()),
                             new Exception());
@@ -162,6 +168,23 @@ public class ReflectDBQuery {
                 return pstmt.executeUpdate() > 0;
             }
         }
+    }
+
+    /**
+     * Checks whether or not a given field type is a numeric
+     * SQL data type.
+     * @param fieldType Database field type, derived from {@code ReflectDBField}
+     * @return True if the supplied datatype is a numeric type.
+     */
+    private boolean isNumericType(String fieldType) {
+        boolean isNumeric = false;
+        for (String s : NUM_TYPE) {
+            if (fieldType.startsWith(s)) {
+                isNumeric = true;
+                break;
+            }
+        }
+        return isNumeric;
     }
 
     public boolean delete(Object obj) {
@@ -190,7 +213,7 @@ public class ReflectDBQuery {
             }
         } else {
             throw new ReflectDBException("Attempted to call ReflectDB.delete on a class with" +
-                    "no defined primary key.");
+                    "no clearly defined primary key.");
         }
     }
 
@@ -200,6 +223,15 @@ public class ReflectDBQuery {
             throw new ReflectDBException("Cannot fetch objects for a class without a table name.");
         }
         tableName = "SELECT * FROM " + tableName;
+        return fetch(tableName, modelClass);
+    }
+
+    public <T> List<T> fetchAll(Class<T> modelClass, int limit) {
+        String tableName = modelClass.getAnnotation(ReflectDBTable.class).tableName();
+        if (tableName.isEmpty()) {
+            throw new ReflectDBException("Cannot fetch objects for a class without a table name.");
+        }
+        tableName = "SELECT * FROM " + tableName + " LIMIT " + limit;
         return fetch(tableName, modelClass);
     }
 
