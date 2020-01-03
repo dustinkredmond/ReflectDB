@@ -46,6 +46,9 @@ public class ReflectDBQuery {
                     return null;
                 }
             }
+            if (rs.isClosed()) {
+                return null;
+            }
             T obj = modelClass.getConstructor().newInstance();
             for (Map.Entry<String, String> entry : MAPPING.getFieldColumnMap(modelClass).entrySet()) {
                 String fieldName = entry.getKey();

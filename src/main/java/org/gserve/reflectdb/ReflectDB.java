@@ -139,7 +139,8 @@ public class ReflectDB {
     }
 
     /**
-     * Fetches a single object from a SQL query.
+     * Fetches a single object from a SQL query. Returns null
+     * if the query does not find any records.
      * @param sql SQL query
      * @param modelClass Class of the object to return.
      * @param <T> Type of the object being returned.
