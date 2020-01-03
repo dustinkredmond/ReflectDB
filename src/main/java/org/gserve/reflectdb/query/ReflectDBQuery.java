@@ -42,7 +42,7 @@ public class ReflectDBQuery {
             ResultSet rs = ps.executeQuery();
             if (rs.getType() == rs.TYPE_FORWARD_ONLY && rs.isBeforeFirst()) {
                 // Must advance ResultSet if it's before first row.
-                if (!rs.next()) {
+                if (rs.isClosed() || !rs.next()) {
                     return null;
                 }
             }
