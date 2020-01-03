@@ -20,7 +20,6 @@ package org.gserve.reflectdb.model;
 
 import org.gserve.reflectdb.ReflectDB;
 import org.gserve.reflectdb.annotations.ReflectDBField;
-import org.reflections.Reflections;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -45,13 +44,10 @@ public class ReflectDBTable {
 
     public static List<ReflectDBTable> findAll() {
         List<ReflectDBTable> tables = new ArrayList<>();
-
-        // You found it right here, ReflectDB's only use of the org.reflections:reflections dependency
-        Reflections ref = new Reflections(ReflectDB.getInstance().getConfig().getModelPackage());
-        for (Class<?> cl : ref.getTypesAnnotatedWith(org.gserve.reflectdb.annotations.ReflectDBTable.class)) {
-            org.gserve.reflectdb.annotations.ReflectDBTable reflectDBTable = cl.getAnnotation(org.gserve.reflectdb.annotations.ReflectDBTable.class);
-            tables.add(new ReflectDBTable(reflectDBTable.tableName(), getColumnsFromTableBean(cl.getDeclaredFields())));
-        }
+        ReflectDB.getInstance().getConfig().getModelClasses().forEach(clazz -> {
+            org.gserve.reflectdb.annotations.ReflectDBTable table = clazz.getAnnotation(org.gserve.reflectdb.annotations.ReflectDBTable.class);
+            tables.add(new ReflectDBTable(table.tableName(), getColumnsFromTableBean(clazz.getDeclaredFields())));
+        });
         return tables;
     }
 

@@ -33,8 +33,7 @@ public class RunnableTest {
                     "TEST_DB",
                     "",
                     "",
-                    3306,
-                    "org.gserve");
+                    3306);
 
     public static void main(String[] args) {
         // Test API during development here.

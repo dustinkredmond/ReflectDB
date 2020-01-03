@@ -37,7 +37,7 @@ import java.util.List;
 public class ReflectDB {
     private static ReflectDBConfig config = null;
 
-    private ReflectDB() {}
+    private ReflectDB() { super(); }
 
     /**
      * Initialize the ReflectDB library with configuration to be used throughout.
@@ -214,6 +214,24 @@ public class ReflectDB {
                 throw new ReflectDBException(String.format("SQL Exception occurred when attempting" +
                         " to drop table: %s\t|%s", table.tableName(), e.getMessage()));
             }
+        }
+    }
+
+    /**
+     * Designates a class annotated with {@code ReflectDBTable} to be used by ReflectDB.
+     * @param modelClass Class annotated with {@code ReflectDBTable}
+     */
+    public void addModelClass(Class<?> modelClass) {
+        this.getConfig().addModelClass(modelClass);
+    }
+
+    /**
+     * Designates a list of classes annotated with {@code ReflectDBTable} to be used by ReflectDB.
+     * @param classes Classes annotated with {@code ReflectDBTable}
+     */
+    public void addModelClasses(Class<?>... classes) {
+        for (Class<?> aClass : classes) {
+            this.getConfig().addModelClass(aClass);
         }
     }
 

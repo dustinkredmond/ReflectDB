@@ -46,12 +46,11 @@ public class ReflectDBTest {
                     "TEST_DB",
                     "",
                     "",
-                    3306,
-                    "org.gserve"));
+                    3306));
 
     @Test
     public void testA() {
-        assert (db.getConfig() != null);
+        db.addModelClass(DBTestTable.class);
         // Since we'll be doing inserts with ID, need to drop.
         db.dropTable(DBTestTable.class);
     }

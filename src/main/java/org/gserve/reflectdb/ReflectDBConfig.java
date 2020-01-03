@@ -18,6 +18,8 @@ package org.gserve.reflectdb;
  *
  */
 
+import java.util.HashSet;
+
 /**
  * Configuration object for the {@code ReflectDB} class. This class provides fields
  * to hold all of the necessary configuration.
@@ -26,13 +28,12 @@ package org.gserve.reflectdb;
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class ReflectDBConfig {
-    public ReflectDBConfig(String url, String databaseName, String databaseUsername, String databasePassword, int port, String modelPackage) {
+    public ReflectDBConfig(String url, String databaseName, String databaseUsername, String databasePassword, int port) {
         this.url = url;
         this.databaseName = databaseName;
         this.databaseUsername = databaseUsername;
         this.databasePassword = databasePassword;
         this.port = port;
-        this.modelPackage = modelPackage;
     }
 
     private String url;
@@ -41,6 +42,15 @@ public class ReflectDBConfig {
     private String databasePassword;
     private int port;
     private String modelPackage;
+    private HashSet<Class<?>> modelClasses = new HashSet<>();
+
+    public void addModelClass(Class<?> modelClass) {
+        modelClasses.add(modelClass);
+    }
+
+    public HashSet<Class<?>> getModelClasses() {
+        return modelClasses;
+    }
 
     public String getUrl() {
         return url;
@@ -80,14 +90,6 @@ public class ReflectDBConfig {
 
     public void setPort(int port) {
         this.port = port;
-    }
-
-    public String getModelPackage() {
-        return modelPackage;
-    }
-
-    public void setModelPackage(String modelPackage) {
-        this.modelPackage = modelPackage;
     }
 
     public boolean isSqlite() {
