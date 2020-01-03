@@ -4,7 +4,7 @@
 
 Lightweight tool to provide ORM and facilitate quick table creation using straightforward annotations.
 
-ReflectDB is a simple library that mimics some of the nifty functionalities of larger, well-known frameworks without all of the bulk and mountain of dependencies. We have only a single dependency (https://github.com/ronmamo/reflections/), and only for one method call at that!
+ReflectDB is a simple library that mimics some of the nifty functionalities of larger, well-known frameworks without all of the bulk and mountain of dependencies. ***We don't have any dependencies***
 
 Reflect DB includes features like:
 1. Object Relational Mapping (ORM)
@@ -21,16 +21,7 @@ If the `ReflectDB` class doesn't provide a way for you to accomplish your goal, 
 ---
 # Getting Started
 
-## 1a. Add ReflectDB's one dependency to pom.xml
-```
-  <dependency>
-    <groupId>org.reflections</groupId>
-    <artifactId>reflections</artifactId>
-    <version>0.9.11</version>
-  </dependency>   
-```
-
-### 1b. Alternatively, get ReflectDB from our repository
+### 1a. Get `ReflectDB` from our repository
 Simply add the below to your project's POM and there's no need to add the dependency from step 1a.
 ```
 <repositories>
@@ -56,7 +47,7 @@ Simply add the below to your project's POM and there's no need to add the depend
 </dependencies>
 ```
 
-### 1c. Alternatively...
+### 1b. Alternatively...
 
 If you don't use Maven to build, and you don't want to compile from source, binaries are available
 on our website for you to include in your project. Simply visit https://www.gserve.org/reflectdb and 
@@ -96,11 +87,12 @@ public class TestReflectDB {
           "jdbc:sqlite:MY_DATABASE.db",     // DB connection string
           "username",                       // DB username (if applicable)
           "pass",                           // DB password (if applicable)
-          3306,                             // DB port (if applicable)
-          "com.example.model");             // Package containing your POJO classes 
+          3306);                            // DB port (if applicable) 
   
   public static void main(String[] args) {
-      ReflectDB reflectDB = ReflectDB.initialize(CONFIG);
+      ReflectDB reflectDB = ReflectDB.initialize(CONFIG);                   // Initialize ReflectDB with its config
+      reflectDB.addModelClass(MyTableBean.class);                           // Add model classes that ReflectDB should use
+      reflectDB.addModelClasses(MyOtherBean.class, YetAnotherBean.class);   // Add multiple
   }  
 }
 ```
@@ -120,8 +112,7 @@ public void myFunction(ReflectDB reflectDB) {
   
   // Fetch all Person from database and delete
   reflectDB.fetchAll(Person.class).forEach(reflectDB::delete);
-  
-  
+    
   // Execute a native SQL query
   ResultSet rs = reflectDB.getNativeConnection().prepareStatement("SELECT * FROM PERSON WHERE ...").executeQuery();
     
@@ -131,8 +122,9 @@ public void myFunction(ReflectDB reflectDB) {
 ### 5. Recap
 1. Instantiate `ReflectDB`
 2. Call `ReflectDB.initialize(config)`
-3. Call `ReflectDB.createTablesIfNotExists();`
-4. Happy developing! Call `ReflectDB` methods to make life simpler.
+3. Call `ReflectDB.addModelClass()` to add tables.
+4. Call `ReflectDB.createTablesIfNotExists();`
+5. Happy developing! Call `ReflectDB` methods to make life simpler.
 ---
 
 Please feel free to contribute to this repository, let me know if you have any questions!
