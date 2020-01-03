@@ -30,6 +30,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -128,6 +129,15 @@ public class ReflectDBTest {
         assert(db.save(test));
         DBTestTable test2 = db.fetchSingle("SELECT * FROM TEST_TABLE WHERE ID = 1", DBTestTable.class);
         assertEquals(test2.getAge(), 26);
+    }
+
+    @Test
+    public void testJ() {
+        // test fetching object that doesn't exist
+        DBTestTable test = db.fetchSingle("SELECT * FROM TEST_TABLE WHERE ID = 500", DBTestTable.class);
+        assertNull(test);
+        List<DBTestTable> tests = db.fetch("SELECT * FROM TEST_TABLE WHERE ID = 500", DBTestTable.class);
+        assertEquals(0, tests.size());
     }
 
     @AfterAll
