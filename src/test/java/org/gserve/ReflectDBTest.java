@@ -140,6 +140,17 @@ public class ReflectDBTest {
         assertEquals(0, tests.size());
     }
 
+    @Test
+    public void testK() {
+        db.insert(new DBTestTable(250, "TestPerson", 25));
+        assertEquals("TestPerson", db.findById(250, DBTestTable.class).getName());
+    }
+
+    @Test
+    public void testL() {
+        assertNull(db.findById(1024, DBTestTable.class));
+    }
+
     @AfterAll
     static void tearDown() {
         try {
