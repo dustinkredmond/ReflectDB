@@ -59,7 +59,48 @@ public class ReflectDBQuery {
             }
             return obj;
         } catch (SQLException e) {
-            throw new ReflectDBException(String.format("Exception occurred in query: %s", sql), e);
+            throw new ReflectDBException(String.format("SQLException occurred in query: %s", sql), e);
+        } catch (NoSuchMethodException e) {
+            throw new ReflectDBException(String.format("Model Class: %s must declare a no-argument constructor." +
+                    " E.g. public MyClassName() { super(); }", modelClass.getName()));
+        } catch (Exception e) {
+            throw new UnsupportedOperationException(e);
+        }
+    }
+
+
+    public <T> T findById(long id, Class<T> modelClass) {
+        String tableName = modelClass.getDeclaredAnnotation(ReflectDBTable.class).tableName();
+        String primaryKey = "";
+        for (Field f: modelClass.getDeclaredFields()) {
+            ReflectDBField rField = f.getAnnotation(ReflectDBField.class);
+            if (rField.primaryKey()) {
+                primaryKey = rField.fieldName();
+            }
+        }
+        if (primaryKey.isEmpty() || primaryKey.trim().isEmpty()) {
+            throw new ReflectDBException("Table must specify a primary key.");
+        }
+        final String sql = "SELECT * FROM " + tableName + " WHERE " + primaryKey + " = " + id;
+        try (Connection conn = DB.getNativeConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.getType() == rs.TYPE_FORWARD_ONLY && rs.isBeforeFirst()){
+                if (rs.isClosed() || !rs.next()) {
+                    return null;
+                }
+            }
+            if (rs.isClosed()) {
+                return null;
+            }
+            T obj = modelClass.getConstructor().newInstance();
+            for (Map.Entry<String, String> entry : MAPPING.getFieldColumnMap(modelClass).entrySet()) {
+                Field f = obj.getClass().getDeclaredField(entry.getKey());
+                f.setAccessible(true);
+                f.set(obj, rs.getObject(entry.getValue()));
+            }
+            return obj;
+        } catch (SQLException e) {
+            throw new ReflectDBException(String.format("SQLException occurred in query: %s", sql), e);
         } catch (NoSuchMethodException e) {
             throw new ReflectDBException(String.format("Model Class: %s must declare a no-argument constructor." +
                     " E.g. public MyClassName() { super(); }", modelClass.getName()));
@@ -82,8 +123,13 @@ public class ReflectDBQuery {
                 objList.add(obj);
             }
             return objList;
+        } catch (SQLException e) {
+            throw new ReflectDBException(String.format("SQLException occurred in query: %s", sql), e);
+        } catch (NoSuchMethodException e) {
+            throw new ReflectDBException(String.format("Model class: %s must declare a no-argument constructor." +
+                    "E.g. public MyClassName() { super(); }", modelClass.getName()));
         } catch (Exception e) {
-            throw new ReflectDBException(String.format("Exception occurred in query: %s", sql), e);
+            throw new UnsupportedOperationException(e);
         }
     }
 

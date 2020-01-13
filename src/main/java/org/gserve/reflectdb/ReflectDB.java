@@ -111,6 +111,18 @@ public class ReflectDB {
     }
 
     /**
+     * Fetches an object from the database by its unique ID value. This query uses the DB primary key
+     * as a search criterion.
+     * @param id Unique ID of the object (primary key)
+     * @param modelClass Type to fetch.
+     * @param <T> Type of the class being returned.
+     * @return An object with specified ID, or null if not exists.
+     */
+    public <T> T findById(long id, Class<T> modelClass) {
+        return new ReflectDBQuery().findById(id, modelClass);
+    }
+
+    /**
      * Uses full database connection string and credentials if necessary to retrieve a {@code Connection}
      * , otherwise just uses the URL.
      * @return {@code java.sql.Connection}
