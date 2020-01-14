@@ -127,4 +127,12 @@ public void myFunction(ReflectDB reflectDB) {
 5. Happy developing! Call `ReflectDB` methods to make life simpler.
 ---
 
-Please feel free to contribute to this repository, let me know if you have any questions!
+### Note
+
+ReflectDB was developed for use with MySQL or MariaDB databases. It has been extensively tested with both. While it 
+is possible that another type of database will work with ReflectDB, you should extensively test this yourself before considering
+the use of ReflectDB in a mission-critical project or a production environment. That being said, we try to use ANSI-compliant SQL, so feel free to give it a go in your development environment. It probably won't melt your database, but the risk is yours to take.
+
+---
+### [Release Notes](./RELEASE.md)
+
