@@ -110,9 +110,13 @@ public class ReflectDBTest {
     }
 
     @Test
-    public void testG() throws SQLException {
-        db.createTablesIfNotExists();
-        assert db.insert(new DBTestTable(1, "Dustin", 26));
+    public void testG() {
+        try {
+            db.createTablesIfNotExists();
+            assert db.insert(new DBTestTable(1, "Dustin", 26));
+        } catch (SQLException e) {
+            fail(e);
+        }
     }
 
     @Test
@@ -122,8 +126,12 @@ public class ReflectDBTest {
     }
 
     @Test
-    public void testI() throws SQLException {
-        db.insert(new DBTestTable(1, "Dustin", 27));
+    public void testI() {
+        try {
+            db.insert(new DBTestTable(1, "Dustin", 27));
+        } catch (SQLException e) {
+            fail(e);
+        }
         DBTestTable test = db.fetchSingle("SELECT * FROM TEST_TABLE WHERE ID = 1", DBTestTable.class);
         test.setAge(26);
         assert(db.save(test));
@@ -132,23 +140,38 @@ public class ReflectDBTest {
     }
 
     @Test
-    public void testJ() throws SQLException {
+    public void testJ() {
         // test fetching object that doesn't exist
         DBTestTable test = db.fetchSingle("SELECT * FROM TEST_TABLE WHERE ID = 500", DBTestTable.class);
         assertNull(test);
-        List<DBTestTable> tests = db.fetch("SELECT * FROM TEST_TABLE WHERE ID = 500", DBTestTable.class);
-        assertEquals(0, tests.size());
+        List<DBTestTable> tests;
+        try {
+            tests = db.fetch("SELECT * FROM TEST_TABLE WHERE ID = 500", DBTestTable.class);
+            assertEquals(0, tests.size());
+        } catch (SQLException e) {
+            fail(e);
+        }
     }
 
     @Test
-    public void testK() throws SQLException {
-        db.insert(new DBTestTable(250, "TestPerson", 25));
-        assertEquals("TestPerson", db.findById(250, DBTestTable.class).getName());
+    public void testK() {
+        try {
+            db.insert(new DBTestTable(250, "TestPerson", 25));
+            assertEquals("TestPerson", db.findById(250, DBTestTable.class).getName());
+        } catch (SQLException e) {
+            fail(e);
+        }
     }
 
     @Test
-    public void testL() throws SQLException {
-        assertNull(db.findById(1024, DBTestTable.class));
+    public void testL() {
+        try {
+            DBTestTable test = db.findById(1024, DBTestTable.class);
+            assertNull(db.findById(1024, DBTestTable.class));
+        } catch (SQLException e) {
+            fail(e);
+        }
+
     }
 
     @AfterAll

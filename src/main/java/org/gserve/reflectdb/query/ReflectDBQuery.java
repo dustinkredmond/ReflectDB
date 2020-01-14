@@ -88,13 +88,10 @@ public class ReflectDBQuery {
         final String sql = "SELECT * FROM " + tableName + " WHERE " + primaryKey + " = " + id;
         try (Connection conn = DB.getNativeConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
-            if (rs.getType() == rs.TYPE_FORWARD_ONLY && rs.isBeforeFirst()){
-                if (rs.isClosed() || !rs.next()) {
+            if (rs.isClosed() || rs.isBeforeFirst()){
+                if (!rs.next()) {
                     return null;
                 }
-            }
-            if (rs.isClosed()) {
-                return null;
             }
             T obj = modelClass.getConstructor().newInstance();
             for (Map.Entry<String, String> entry : MAPPING.getFieldColumnMap(modelClass).entrySet()) {
