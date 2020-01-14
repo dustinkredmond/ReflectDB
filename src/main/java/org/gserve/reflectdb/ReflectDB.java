@@ -36,6 +36,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class ReflectDB {
     private static ReflectDBConfig config = null;
+    private final ReflectDBQuery QUERY = new ReflectDBQuery();
 
     private ReflectDB() { super(); }
 
@@ -118,8 +119,8 @@ public class ReflectDB {
      * @param <T> Type of the class being returned.
      * @return An object with specified ID, or null if not exists.
      */
-    public <T> T findById(long id, Class<T> modelClass) {
-        return new ReflectDBQuery().findById(id, modelClass);
+    public <T> T findById(long id, Class<T> modelClass) throws SQLException {
+        return QUERY.findById(id, modelClass);
     }
 
     /**
@@ -134,18 +135,18 @@ public class ReflectDB {
                     "ReflectDB has not yet been initialized with a ReflectDBConfig.");
         }
         if (config.getDatabaseUsername().isEmpty() || config.getDatabasePassword().isEmpty()) {
-			// SQLite doesn't require these, so only need URL
+            // SQLite doesn't require these, so only need URL
             return DriverManager.getConnection(config.getUrl());
         } else {
-			// All other RDBMS, authenticate with url, user, and password
+            // All other RDBMS, authenticate with url, user, and password
             return DriverManager.getConnection(config.getUrl(), config.getDatabaseUsername(), config.getDatabasePassword());
         }
     }
 
-	/**
-	  * Convenience method to get a {@code java.sql.Connection} using the {@code DriverManager.getConnection()} method.
-	  * @return A {@code java.sql.Connection} for the configured database.
-	  */
+    /**
+     * Convenience method to get a {@code java.sql.Connection} using the {@code DriverManager.getConnection()} method.
+     * @return A {@code java.sql.Connection} for the configured database.
+     */
     public Connection getNativeConnection() throws SQLException {
         return ReflectDB.getJdbcConnection();
     }
@@ -159,7 +160,11 @@ public class ReflectDB {
      * @return Returns a single object fitting the specified query.
      */
     public <T> T fetchSingle(String sql, Class<T> modelClass) {
-        return new ReflectDBQuery().fetchSingle(sql, modelClass);
+        try {
+            return new ReflectDBQuery().fetchSingle(sql, modelClass);
+        } catch (SQLException e) {
+            return null;
+        }
     }
 
     /**
@@ -171,8 +176,8 @@ public class ReflectDB {
      * @param <T> The type of the object returned.
      * @return List of objects representing a SQL query.
      */
-    public <T> List<T> fetch(String sql, Class<T> modelClass) {
-        return new ReflectDBQuery().fetch(sql, modelClass);
+    public <T> List<T> fetch(String sql, Class<T> modelClass) throws SQLException {
+        return QUERY.fetch(sql, modelClass);
     }
 
     /**
@@ -180,8 +185,8 @@ public class ReflectDB {
      * @param obj A newly created object to be inserted.
      * @return True if the INSERT appears to succeed.
      */
-    public boolean insert(Object obj) {
-        return new ReflectDBQuery().insert(obj);
+    public boolean insert(Object obj) throws SQLException {
+        return QUERY.insert(obj);
     }
 
     /**
@@ -262,8 +267,8 @@ public class ReflectDB {
      * @param <T> The ReflectDB type.
      * @return List of all objects in a table.
      */
-    public <T> List<T> fetchAll(Class<T> modelClass) {
-        return new ReflectDBQuery().fetchAll(modelClass);
+    public <T> List<T> fetchAll(Class<T> modelClass) throws SQLException {
+        return QUERY.fetchAll(modelClass);
     }
 
     /**
@@ -273,5 +278,7 @@ public class ReflectDB {
      * @param <T> The ReflectDB type.
      * @return List of objects in the table.
      */
-    public <T> List<T> fetch(Class<T> modelClass, int limit) { return new ReflectDBQuery().fetchAll(modelClass, limit); }
+    public <T> List<T> fetch(Class<T> modelClass, int limit) throws SQLException {
+        return QUERY.fetchAll(modelClass, limit);
+    }
 }

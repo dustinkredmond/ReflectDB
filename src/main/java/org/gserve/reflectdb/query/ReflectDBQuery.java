@@ -37,8 +37,9 @@ import java.util.StringJoiner;
  */
 public class ReflectDBQuery {
 
-    public <T> T fetchSingle(String sql, Class<T> modelClass) {
-        try (Connection conn = DB.getNativeConnection(); PreparedStatement ps = conn.prepareStatement(sql+=" LIMIT 1")) {
+    public <T> T fetchSingle(String sql, Class<T> modelClass) throws SQLException {
+        final String query = sql + " LIMIT 1";
+        try (Connection conn = DB.getNativeConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
             if (rs.getType() == rs.TYPE_FORWARD_ONLY && rs.isBeforeFirst()) {
                 // Must advance ResultSet if it's before first row.
@@ -48,6 +49,9 @@ public class ReflectDBQuery {
             }
             if (rs.isClosed()) {
                 return null;
+            }
+            if (rs.isBeforeFirst()) {
+                rs.next();
             }
             T obj = modelClass.getConstructor().newInstance();
             for (Map.Entry<String, String> entry : MAPPING.getFieldColumnMap(modelClass).entrySet()) {
@@ -59,7 +63,7 @@ public class ReflectDBQuery {
             }
             return obj;
         } catch (SQLException e) {
-            throw new ReflectDBException(String.format("SQLException occurred in query: %s", sql), e);
+            throw e;
         } catch (NoSuchMethodException e) {
             throw new ReflectDBException(String.format("Model Class: %s must declare a no-argument constructor." +
                     " E.g. public MyClassName() { super(); }", modelClass.getName()));
@@ -69,7 +73,7 @@ public class ReflectDBQuery {
     }
 
 
-    public <T> T findById(long id, Class<T> modelClass) {
+    public <T> T findById(long id, Class<T> modelClass) throws SQLException {
         String tableName = modelClass.getDeclaredAnnotation(ReflectDBTable.class).tableName();
         String primaryKey = "";
         for (Field f: modelClass.getDeclaredFields()) {
@@ -100,7 +104,7 @@ public class ReflectDBQuery {
             }
             return obj;
         } catch (SQLException e) {
-            throw new ReflectDBException(String.format("SQLException occurred in query: %s", sql), e);
+            throw e;
         } catch (NoSuchMethodException e) {
             throw new ReflectDBException(String.format("Model Class: %s must declare a no-argument constructor." +
                     " E.g. public MyClassName() { super(); }", modelClass.getName()));
@@ -109,13 +113,13 @@ public class ReflectDBQuery {
         }
     }
 
-    public <T> List<T> fetch(String sql, Class<T> modelClass) {
+    public <T> List<T> fetch(String sql, Class<T> modelClass) throws SQLException {
         List<T> objList = new ArrayList<>();
         try (Connection conn = DB.getNativeConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 T obj = modelClass.getConstructor().newInstance();
-                for (Map.Entry<String,String> entry: MAPPING.getFieldColumnMap(modelClass).entrySet()) {
+                for (Map.Entry<String, String> entry : MAPPING.getFieldColumnMap(modelClass).entrySet()) {
                     Field f = obj.getClass().getDeclaredField(entry.getKey());
                     f.setAccessible(true);
                     f.set(obj, rs.getObject(entry.getValue()));
@@ -124,7 +128,7 @@ public class ReflectDBQuery {
             }
             return objList;
         } catch (SQLException e) {
-            throw new ReflectDBException(String.format("SQLException occurred in query: %s", sql), e);
+            throw e;
         } catch (NoSuchMethodException e) {
             throw new ReflectDBException(String.format("Model class: %s must declare a no-argument constructor." +
                     "E.g. public MyClassName() { super(); }", modelClass.getName()));
@@ -135,10 +139,11 @@ public class ReflectDBQuery {
 
     /**
      * Insert and save a new object in the database.
-     * @param obj Object to save in the database (class must be annotated)
+     * @param obj Object to save in the database. (class must be annotated)
      * @return True if and only if the object was inserted.
+     * @throws SQLException if the INSERT SQL causes an exception.
      */
-    public boolean insert(Object obj) {
+    public boolean insert(Object obj) throws SQLException {
 
         StringBuilder query = new StringBuilder("INSERT INTO ");
         query.append(obj.getClass().getAnnotation(ReflectDBTable.class).tableName())
@@ -165,8 +170,6 @@ public class ReflectDBQuery {
         try (Connection conn = DB.getNativeConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            throw new ReflectDBException(String.format("Malformed SQL: %s", sql), e);
         }
     }
 
@@ -266,7 +269,7 @@ public class ReflectDBQuery {
         }
     }
 
-    public <T> List<T> fetchAll(Class<T> modelClass) {
+    public <T> List<T> fetchAll(Class<T> modelClass) throws SQLException {
         String tableName = modelClass.getAnnotation(ReflectDBTable.class).tableName();
         if (tableName.isEmpty()) {
             throw new ReflectDBException("Cannot fetch objects for a class without a table name.");
@@ -275,7 +278,7 @@ public class ReflectDBQuery {
         return fetch(tableName, modelClass);
     }
 
-    public <T> List<T> fetchAll(Class<T> modelClass, int limit) {
+    public <T> List<T> fetchAll(Class<T> modelClass, int limit) throws SQLException {
         String tableName = modelClass.getAnnotation(ReflectDBTable.class).tableName();
         if (tableName.isEmpty()) {
             throw new ReflectDBException("Cannot fetch objects for a class without a table name.");
