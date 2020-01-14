@@ -122,7 +122,7 @@ public class ReflectDBTest {
     }
 
     @Test
-    public void testI() {
+    public void testI() throws SQLException {
         db.insert(new DBTestTable(1, "Dustin", 27));
         DBTestTable test = db.fetchSingle("SELECT * FROM TEST_TABLE WHERE ID = 1", DBTestTable.class);
         test.setAge(26);
@@ -132,7 +132,7 @@ public class ReflectDBTest {
     }
 
     @Test
-    public void testJ() {
+    public void testJ() throws SQLException {
         // test fetching object that doesn't exist
         DBTestTable test = db.fetchSingle("SELECT * FROM TEST_TABLE WHERE ID = 500", DBTestTable.class);
         assertNull(test);
@@ -141,25 +141,34 @@ public class ReflectDBTest {
     }
 
     @Test
-    public void testK() {
+    public void testK() throws SQLException {
         db.insert(new DBTestTable(250, "TestPerson", 25));
         assertEquals("TestPerson", db.findById(250, DBTestTable.class).getName());
     }
 
     @Test
-    public void testL() {
+    public void testL() throws SQLException {
         assertNull(db.findById(1024, DBTestTable.class));
     }
 
     @AfterAll
     static void tearDown() {
-        try {
-            assertTrue(Files.deleteIfExists(Paths.get("TEST_DATABASE.db")),
-                    "Unable to remove TEST_DATABASE, java.sql.Connection " +
-                            "objects have not been closed.");
-        } catch (IOException e) {
-            fail(String.format("Failed with (%s), this may mean that a java.sql.Connection" +
-                    "was not properly closed. TEST_DATABASE not removed.\n", e.getMessage()));
+        // You should test with both SQLite as well as MySQL/MariaDB
+        // SQLite makes it very apparent if all connection objects haven't
+        // been closed, as TEST_DATABASE.db will hang around.
+        if (db.getConfig().isSqlite()) {
+            try {
+                assertTrue(Files.deleteIfExists(Paths.get("TEST_DATABASE.db")),
+                        "Unable to remove TEST_DATABASE, java.sql.Connection " +
+                                "objects have not been closed.");
+            } catch (IOException e) {
+                fail(String.format("Failed with (%s), this may mean that a java.sql.Connection" +
+                        "was not properly closed. TEST_DATABASE not removed.\n", e.getMessage()));
+            }
+        } else {
+            // NOTE If anymore tables are used during testing, drop them here.
+            db.dropTable(DBTestTable.class);
         }
+
     }
 }
