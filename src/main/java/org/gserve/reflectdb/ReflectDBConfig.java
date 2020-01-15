@@ -18,6 +18,9 @@ package org.gserve.reflectdb;
  *
  */
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashSet;
 
 /**
@@ -36,10 +39,20 @@ public class ReflectDBConfig {
         this.port = port;
     }
 
+    public ReflectDBConfig(DataSource ds) throws SQLException {
+        this.dataSource = ds;
+        this.url = ds.getConnection().getMetaData().getURL();
+    }
+
+    DataSource getDataSource() {
+        return this.dataSource;
+    }
+
     private String url;
     private String databaseName;
     private String databaseUsername;
     private String databasePassword;
+    private DataSource dataSource = null;
     private int port;
     private String modelPackage;
     private HashSet<Class<?>> modelClasses = new HashSet<>();

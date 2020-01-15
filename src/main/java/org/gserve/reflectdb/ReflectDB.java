@@ -134,7 +134,9 @@ public class ReflectDB {
             throw new UnsupportedOperationException(
                     "ReflectDB has not yet been initialized with a ReflectDBConfig.");
         }
-        if (config.getDatabaseUsername().isEmpty() || config.getDatabasePassword().isEmpty()) {
+        if (config.getDataSource() != null) {
+           return config.getDataSource().getConnection();
+        } else if (config.getDatabaseUsername().isEmpty() || config.getDatabasePassword().isEmpty()) {
             // SQLite doesn't require these, so only need URL
             return DriverManager.getConnection(config.getUrl());
         } else {
