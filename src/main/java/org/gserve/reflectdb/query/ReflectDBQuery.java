@@ -101,7 +101,10 @@ public class ReflectDBQuery {
             }
             return obj;
         } catch (SQLException e) {
-            throw e;
+            if (!"Current position is before the first row".equals(e.getMessage())) {
+                throw e;
+            }
+            return null;
         } catch (NoSuchMethodException e) {
             throw new ReflectDBException(String.format("Model Class: %s must declare a no-argument constructor." +
                     " E.g. public MyClassName() { super(); }", modelClass.getName()));
