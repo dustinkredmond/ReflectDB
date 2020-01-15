@@ -191,7 +191,11 @@ public class ReflectDB {
 
     /**
      * Attempts to save the current object (UPDATE) it in the database.
-     * <p>Internally, ReflectDB uses the primary key to look up objects.
+     * <p>Internally, ReflectDB uses the primary key to look up objects,
+     * therefore the object to be saved should not have a primary key that
+     * deviates from the original.
+     * <p>If you would like to update an object's primary key, it is recommended
+     * that you do so using a native SQL query.
      * @param obj Object whose properties should be updated.
      * @return Returns true if the update appears successful.
      */
