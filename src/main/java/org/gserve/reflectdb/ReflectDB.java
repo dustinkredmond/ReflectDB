@@ -23,6 +23,7 @@ import org.gserve.reflectdb.model.ReflectDBColumn;
 import org.gserve.reflectdb.model.ReflectDBTable;
 import org.gserve.reflectdb.query.ReflectDBQuery;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.DriverManager;
@@ -47,6 +48,18 @@ public class ReflectDB {
      */
     public static ReflectDB initialize(ReflectDBConfig config) {
         ReflectDB.config = config;
+        return ReflectDB.getInstance();
+    }
+
+    /**
+     * Initialize the ReflectDB library with a {@code javax.sql.DataSource} instead
+     * of a {@code ReflectDBConfig}
+     * @param dataSource {@code javax.sql.DataSource}
+     * @return Configured ReflectDB instance
+     * @throws SQLException If the DataSource creation throws SQLException
+     */
+    public static ReflectDB initialize(DataSource dataSource) throws SQLException {
+        config = new ReflectDBConfig(dataSource);
         return ReflectDB.getInstance();
     }
 
