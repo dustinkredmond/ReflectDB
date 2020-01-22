@@ -21,6 +21,7 @@ package org.gserve;
 import org.gserve.reflectdb.ReflectDB;
 import org.gserve.reflectdb.ReflectDBConfig;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -49,11 +50,18 @@ public class ReflectDBTest {
                     "",
                     3306));
 
-    @Test
-    public void testA() {
+    @BeforeAll
+    public static void testA() {
         db.addModelClass(DBTestTable.class);
+
+        // To mitigate bug in SQLite see ReflectDBConfig's addModelClass() method
+        if (!db.getConfig().isSqlite()) {
+            db.addModelClass(TableWithDateField.class);
+        }
+
         // Since we'll be doing inserts with ID, need to drop.
         db.dropTable(DBTestTable.class);
+
     }
 
     @Test
@@ -172,6 +180,22 @@ public class ReflectDBTest {
             fail(e);
         }
 
+    }
+
+    @Test
+    public void testM() {
+        if (db.getConfig().isSqlite()) {
+            // Test not meant for SQLite databases.
+            return;
+        }
+        java.sql.Date createDate = java.sql.Date.valueOf("2019-01-05");
+        TableWithDateField test = new TableWithDateField(1, createDate);
+        db.save(test);
+        try {
+            assertEquals(db.findById(1, TableWithDateField.class).getCreated(), createDate);
+        } catch (SQLException e) {
+            fail(e);
+        }
     }
 
     @AfterAll
