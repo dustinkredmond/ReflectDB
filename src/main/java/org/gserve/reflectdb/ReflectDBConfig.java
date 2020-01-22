@@ -18,8 +18,10 @@ package org.gserve.reflectdb;
  *
  */
 
+import org.gserve.reflectdb.annotations.ReflectDBField;
+
 import javax.sql.DataSource;
-import java.sql.Connection;
+import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.HashSet;
 
@@ -58,6 +60,18 @@ public class ReflectDBConfig {
     private HashSet<Class<?>> modelClasses = new HashSet<>();
 
     public void addModelClass(Class<?> modelClass) {
+        if (this.isSqlite()) {
+            for (Field field : modelClass.getDeclaredFields()) {
+                ReflectDBField dbField = field.getAnnotation(ReflectDBField.class);
+                if (dbField != null && dbField.fieldType().contains("DATE")) {
+                    throw new UnsupportedOperationException(
+                            String.format("Tried to add model class with DATE field %s.%s while using " +
+                            "SQLite. SQLite does not currently support this.",
+                                    field.getDeclaringClass(),
+                                    field.getName()));
+                }
+            }
+        }
         modelClasses.add(modelClass);
     }
 
