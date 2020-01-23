@@ -151,17 +151,21 @@ public class ReflectDBQuery {
         StringJoiner columnNames = new StringJoiner(", ");
         StringJoiner values = new StringJoiner(", ");
         for (Map.Entry<String,String> entry: MAPPING.getFieldColumnMap(obj.getClass()).entrySet()) {
-            columnNames.add(entry.getValue());
             try {
                 Field f = obj.getClass().getDeclaredField(entry.getKey());
                 f.setAccessible(true);
-                if (isNumericType(f.getAnnotation(ReflectDBField.class).fieldType())) {
-                    values.add(f.get(obj).toString());
-                } else if (BOOLEAN.equalsIgnoreCase(f.getAnnotation(ReflectDBField.class).fieldType())) {
-                    boolean insert = f.getBoolean(obj);
-                    values.add(String.valueOf(insert ? 1:0));
-                } else {
-                    values.add("\"" + f.get(obj).toString() + "\"");
+                // If user defines a primary key in their object, then let it persist
+                // otherwise don't default to default value of 0
+                if (!isPrimaryKey(f) || isPrimaryKey(f) && f.getDouble(obj) > 0) {
+                    columnNames.add(entry.getValue());
+                    if (isNumericType(f)) {
+                        values.add(f.get(obj).toString());
+                    } else if (BOOLEAN.equalsIgnoreCase(f.getAnnotation(ReflectDBField.class).fieldType())) {
+                        boolean insert = f.getBoolean(obj);
+                        values.add(String.valueOf(insert ? 1:0));
+                    } else {
+                        values.add("\"" + f.get(obj).toString() + "\"");
+                    }
                 }
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 throw new ReflectDBException(e);
@@ -190,7 +194,7 @@ public class ReflectDBQuery {
         for (Map.Entry<String,String> entry: MAPPING.getFieldColumnMap(obj.getClass()).entrySet()) {
             Field f = obj.getClass().getDeclaredField(entry.getKey());
             f.setAccessible(true);
-            if (isNumericType(f.getAnnotation(ReflectDBField.class).fieldType())) {
+            if (isNumericType(f)) {
                 values.add(entry.getValue() + " = " + f.get(obj).toString());
             } else {
                 values.add(entry.getValue() + " = \"" + f.get(obj).toString() + "\"");
@@ -202,7 +206,7 @@ public class ReflectDBQuery {
         for (Field field : obj.getClass().getDeclaredFields()) {
             if (field.getAnnotation(ReflectDBField.class).primaryKey()) {
                 numPrimaryKey++;
-                if (!isNumericType(field.getAnnotation(ReflectDBField.class).fieldType())) {
+                if (!isNumericType(field)) {
                     throw new ReflectDBException(String.format("Field: %s declared as primary key," +
                             " but field is not a numeric type. ReflectDB requires a numeric type.", field.getName()),
                             new Exception());
@@ -228,15 +232,18 @@ public class ReflectDBQuery {
     /**
      * Checks whether or not a given field type is a numeric
      * SQL data type.
-     * @param fieldType Database field type, derived from {@code ReflectDBField}
+     * @param f Database field, derived from {@code ReflectDBField}
      * @return True if the supplied datatype is a numeric type.
      */
-    private boolean isNumericType(String fieldType) {
+    private boolean isNumericType(Field f) {
         boolean isNumeric = false;
-        for (String s : NUM_TYPE) {
-            if (fieldType.startsWith(s)) {
-                isNumeric = true;
-                break;
+        ReflectDBField dbField = f.getAnnotation(ReflectDBField.class);
+        if (dbField != null) {
+            for (String s : NUM_TYPE) {
+                if (dbField.fieldType().startsWith(s)) {
+                    isNumeric = true;
+                    break;
+                }
             }
         }
         return isNumeric;
@@ -288,6 +295,11 @@ public class ReflectDBQuery {
         }
         tableName = "SELECT * FROM " + tableName + " LIMIT " + limit;
         return fetch(tableName, modelClass);
+    }
+
+    private boolean isPrimaryKey(Field f) {
+        ReflectDBField dbField = f.getAnnotation(ReflectDBField.class);
+        return dbField != null && dbField.primaryKey();
     }
 
     private static final ReflectDB DB = ReflectDB.getInstance();
