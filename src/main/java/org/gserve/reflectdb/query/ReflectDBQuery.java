@@ -164,7 +164,11 @@ public class ReflectDBQuery {
                         boolean insert = f.getBoolean(obj);
                         values.add(String.valueOf(insert ? 1:0));
                     } else {
-                        values.add("\"" + f.get(obj).toString() + "\"");
+                        if (f.get(obj) != null) {
+                            values.add("\"" + f.get(obj).toString() + "\"");
+                        } else {
+                            values.add("''");
+                        }
                     }
                 }
             } catch (NoSuchFieldException | IllegalAccessException e) {
