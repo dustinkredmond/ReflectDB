@@ -88,7 +88,13 @@ public class ReflectDB {
             for (int i = 0; i < columns.size(); i++) {
                 ReflectDBColumn col = columns.get(i);
                 String nullable = col.getNotNull() ? "NOT NULL" : "NULL";
-                String primaryKey = col.isPrimaryKey() ? " PRIMARY KEY" : "";
+                String primaryKey;
+                // Yet another SQLite peculiarity AUTO_INCREMENT not needed
+                if (!config.isSqlite()) {
+                    primaryKey = col.isPrimaryKey() ? " AUTO_INCREMENT PRIMARY KEY " : "";
+                } else {
+                    primaryKey = col.isPrimaryKey() ? " PRIMARY KEY " : "";
+                }
                 sb.append("\t").append(col.getColumnName()).append(" ").append(col.getColumnType()).append(" ").append(nullable).append(primaryKey);
                 if (i < columns.size() -1) {
                     sb.append(",\n");

@@ -68,6 +68,7 @@ public class ReflectDBTest {
     public void testB() {
         String ddl = db.getTableCreateDDL();
         assert (ddl != null && !ddl.isEmpty());
+        System.out.println(ddl);
     }
 
     @Test
