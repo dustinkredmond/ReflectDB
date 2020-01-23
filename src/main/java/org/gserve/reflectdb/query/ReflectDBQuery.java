@@ -155,8 +155,11 @@ public class ReflectDBQuery {
             try {
                 Field f = obj.getClass().getDeclaredField(entry.getKey());
                 f.setAccessible(true);
-                if (NUM_TYPE.contains(f.getAnnotation(ReflectDBField.class).fieldType())) {
+                if (isNumericType(f.getAnnotation(ReflectDBField.class).fieldType())) {
                     values.add(f.get(obj).toString());
+                } else if (BOOLEAN.equalsIgnoreCase(f.getAnnotation(ReflectDBField.class).fieldType())) {
+                    boolean insert = f.getBoolean(obj);
+                    values.add(String.valueOf(insert ? 1:0));
                 } else {
                     values.add("\"" + f.get(obj).toString() + "\"");
                 }
@@ -302,4 +305,5 @@ public class ReflectDBQuery {
             "NUMBER",
             "INT",
             "TINYINT");
+    private static final String BOOLEAN = "BOOLEAN";
 }
