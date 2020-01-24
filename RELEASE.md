@@ -9,8 +9,8 @@
 
 | Release (Newest to Oldest)                                     | Notes                                                                                                                                                        |
 |----------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [2.0.5](https://www.gserve.org/reflectdb/reflectdb-2.0.5.jar)  | 1. Fixed various bugs with SQLite<br/>2. Begin focusing on MySQL/MariaDB (no new SQLite features added)
-| [2.0.4](https://www.gserve.org/reflectdb/reflectdb-2.0.4.jar)  | 1. Ensure queries where cursor position is before first row return null and don't throw SQLException.                                                        |
+| [2.0.5](https://www.gserve.org/reflectdb/reflectdb-2.0.5.jar)  | 1. Fixed various bugs with SQLite<br/>2. Begin focusing on MySQL/MariaDB (no new SQLite features added)                                                     |
+| [2.0.4](https://www.gserve.org/reflectdb/reflectdb-2.0.4.jar)  | 1. Ensure queries where cursor position is before first row return null and don't throw SQLException                                                        |
 | [2.0.3](https://www.gserve.org/reflectdb/reflectdb-2.0.3.jar)  | 1. Expand support for SQLite<br/>2. No longer wrap SQLException                                                                                              |
 | [2.0.2](https://www.gserve.org/reflectdb/reflectdb-2.0.2.jar)  | 1. Fixed numerous bugs and added unit tests for each API method <br/>2. Queries now return null if ResultSet empty<br/>3. Fixes for SQLite (testing database)|
 | [2.0.1](https://www.gserve.org/reflectdb/reflectdb-2.0.1.jar)  | 1. Initial release<br/>2. Only used for development purposes/testing                                                                                        |
