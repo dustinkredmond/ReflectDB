@@ -76,8 +76,7 @@ public class ReflectDBTest {
         try {
             db.createTablesIfNotExists();
         } catch (Exception e) {
-            e.printStackTrace();
-            assert (false);
+            fail(e);
         }
     }
 
