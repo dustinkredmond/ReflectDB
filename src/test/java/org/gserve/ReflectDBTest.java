@@ -88,8 +88,7 @@ public class ReflectDBTest {
             db.createTablesIfNotExists();
             assert (ps.executeUpdate() > 0);
         } catch (SQLException e) {
-            e.printStackTrace();
-            assert(false);
+            fail(e);
         }
     }
 
