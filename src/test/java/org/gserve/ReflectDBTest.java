@@ -100,7 +100,7 @@ public class ReflectDBTest {
             rs.next();
             assertEquals(rs.getString("name").toUpperCase(), "JOHN");
         } catch (SQLException e) {
-            assert false;
+            fail(e);
         }
     }
 
@@ -111,8 +111,7 @@ public class ReflectDBTest {
             db.createTablesIfNotExists();
             assertEquals(ps.executeUpdate(), 1);
         } catch (SQLException e) {
-            e.printStackTrace();
-            assert false;
+            fail(e);
         }
     }
 
