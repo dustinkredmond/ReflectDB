@@ -56,6 +56,7 @@ public class ReflectDBTest {
 
         // To mitigate bug in SQLite see ReflectDBConfig's addModelClass() method
         if (!db.getConfig().isSqlite()) {
+            db.dropTable(TableWithDateField.class);
             db.addModelClass(TableWithDateField.class);
         }
 
