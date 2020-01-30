@@ -88,12 +88,14 @@ public class ReflectDBTest {
             db.createTablesIfNotExists();
             assert (ps.executeUpdate() > 0);
         } catch (SQLException e) {
-            fail(e);
+            // If this test fails, the issue is most likely with the JDBC driver or DB and not ReflectDB
+	    fail(e);
         }
     }
 
     @Test
     public void testE() {
+	// Test native java.sql.Connection first, as library won't work if regular JDBC doesn't
         final String sql = "SELECT * FROM TEST_TABLE WHERE id = 1";
         try (Connection conn = db.getNativeConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             db.createTablesIfNotExists();
@@ -119,7 +121,6 @@ public class ReflectDBTest {
     @Test
     public void testG() {
         try {
-            db.createTablesIfNotExists();
             assert db.insert(new DBTestTable(1, "Dustin", 26));
         } catch (SQLException e) {
             fail(e);
