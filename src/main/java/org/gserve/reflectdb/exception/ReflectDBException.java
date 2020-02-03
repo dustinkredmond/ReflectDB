@@ -34,7 +34,7 @@ public class ReflectDBException extends RuntimeException {
         super(message, e);
         if (e instanceof IllegalAccessException | e instanceof NoSuchFieldException) {
             this.errorCode = ErrorCode.REFLECTION;
-        } else if (e instanceof IncompleteAnnotationException | e instanceof IncompleteAnnotationException){
+        } else if (e instanceof IncompleteAnnotationException) {
             this.errorCode = ErrorCode.ANNOTATION;
         } else if (e instanceof SQLException) {
             this.errorCode = ErrorCode.SQL;
