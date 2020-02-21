@@ -124,4 +124,5 @@ public class ReflectDBConfig {
     }
     public boolean isMySql() { return this.url.toUpperCase().contains("MYSQL"); }
     public boolean isMariaDB() { return this.url.toUpperCase().contains("MARIADB"); }
+    public boolean isUnknownDB() { return !(isSqlite() || isMariaDB() || isMySql()) ; }
 }
