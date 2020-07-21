@@ -22,7 +22,7 @@ If the `ReflectDB` class doesn't provide a way for you to accomplish your goal, 
 # Getting Started
 
 ### 1a. Get `ReflectDB` from our repository
-Simply add the below to your project's POM and there's no need to add the dependency from step 1a.
+If building with Maven, Simply add the below to your project's POM.
 ```
 <repositories>
         <repository>
@@ -51,7 +51,7 @@ Simply add the below to your project's POM and there's no need to add the depend
 
 If you don't use Maven to build, and you don't want to compile from source, binaries are available
 on our website for you to include in your project. Simply visit https://www.gserve.org/reflectdb and 
-choose the appropriate version.
+choose the appropriate version. (Note that the most bleeding edge releases may not yet be available here)
 
 ## 2. Annotate POJO classes to model database tables.
 
@@ -131,8 +131,16 @@ public void myFunction(ReflectDB reflectDB) {
 
 ReflectDB was developed for use with MySQL or MariaDB databases. It has been extensively tested with both. While it 
 is possible that another type of database will work with ReflectDB, you should extensively test this yourself before considering
-the use of ReflectDB in a mission-critical project or a production environment. That being said, we try to use ANSI-compliant SQL, so feel free to give it a go in your development environment. It probably won't melt your database, but the risk is yours to take.
+the use of ReflectDB in a mission-critical project or a production environment. That being said, we try to use ANSI-compliant SQL, so feel free to give it a go in your 
+development environment. It probably won't melt your database, but the risk is yours to take.
 
 ---
+
+### Additional note
+
+This is not Hibernate or similar ORM framework. It's simply for easily creating tables and running simple queries. `ReflectDB` is better suited for test/development environments than production usage. More comprehensive ORM frameworks should be considered for this use case.
+
+---
+
 ### [Release Notes](./RELEASE.md)
 
