@@ -25,10 +25,7 @@ import org.gserve.reflectdb.exception.ReflectDBException;
 
 import java.lang.reflect.Field;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.StringJoiner;
+import java.util.*;
 
 /**
  * Class for handling generic SQL Queries.
@@ -308,7 +305,7 @@ public class ReflectDBQuery {
 
     private static final ReflectDB DB = ReflectDB.getInstance();
     private static final QueryMapping MAPPING = new QueryMapping();
-    private final static List<String> NUM_TYPE = List.of(
+    private static final List<String> NUM_TYPE = Arrays.asList(
             "SMALLINT",
             "INTEGER",
             "BIGINT",
@@ -320,6 +317,7 @@ public class ReflectDBQuery {
             "DOUBLE",
             "NUMBER",
             "INT",
-            "TINYINT");
+            "TINYINT"
+    );
     private static final String BOOLEAN = "BOOLEAN";
 }
