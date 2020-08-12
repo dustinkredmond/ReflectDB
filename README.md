@@ -53,7 +53,7 @@ If you don't use Maven to build, and you don't want to compile from source, bina
 on our website for you to include in your project. Simply visit https://www.gserve.org/reflectdb and 
 choose the appropriate version. (Note that the most bleeding edge releases may not yet be available here)
 
-### 1c GitHub Packages
+### 1c. GitHub Packages
 
 The build can also be found in GitHub Packages, should you prefer to go that route.
 

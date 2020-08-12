@@ -35,7 +35,7 @@ import java.util.Map;
 @SuppressWarnings("unused")
 class QueryMapping {
 
-    <T> Map<String, String> getFieldColumnMap(Class<T> cl) {
+    protected <T> Map<String, String> getFieldColumnMap(Class<T> cl) {
         HashMap<String, String> map = new HashMap<>();
         for (Field declaredField : cl.getDeclaredFields()) {
             map.put(declaredField.getName(), declaredField.getAnnotation(ReflectDBField.class).fieldName());
@@ -51,7 +51,7 @@ class QueryMapping {
      * @param i {@code} Index to set.
      * @throws SQLException If the parameter index is incorrect.
      */
-    public void mapObjectToPreparedStatement(Object data, PreparedStatement ps, int i) throws SQLException, ClassCastException {
+    protected void mapObjectToPreparedStatement(Object data, PreparedStatement ps, int i) throws SQLException, ClassCastException {
         if (data instanceof String) {
             ps.setString(i, String.valueOf(data));
         } else if (data instanceof Long) {

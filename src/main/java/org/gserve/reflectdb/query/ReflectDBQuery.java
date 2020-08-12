@@ -308,7 +308,7 @@ public class ReflectDBQuery {
 
     private static final ReflectDB DB = ReflectDB.getInstance();
     private static final QueryMapping MAPPING = new QueryMapping();
-    private static List<String> NUM_TYPE = List.of(
+    private final static List<String> NUM_TYPE = List.of(
             "SMALLINT",
             "INTEGER",
             "BIGINT",
