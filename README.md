@@ -21,45 +21,9 @@ If the `ReflectDB` class doesn't provide a way for you to accomplish your goal, 
 ---
 # Getting Started
 
-### 1a. Get `ReflectDB` from our repository
-If building with Maven, Simply add the below to your project's POM.
-```
-<repositories>
-        <repository>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-                <checksumPolicy>fail</checksumPolicy>
-            </releases>
-            <id>reflectdb</id>
-            <name>ReflectDB</name>
-            <url>https://gserve.org/maven2</url>
-            <layout>default</layout>
-        </repository>
-</repositories>
-    
-<dependencies>
-  <dependency>
-    <groupId>org.gserve</groupId>
-    <artifactId>reflectdb</artifactId>
-    <version>PICK_A_VERSION_TO_GO_HERE</version>
-  </dependency>
-</dependencies>
-```
+## 1. Annotate POJO classes to model database tables.
 
-### 1b. Alternatively...
-
-If you don't use Maven to build, and you don't want to compile from source, binaries are available
-on our website for you to include in your project. Simply visit https://www.gserve.org/reflectdb and 
-choose the appropriate version. (Note that the most bleeding edge releases may not yet be available here)
-
-### 1c. GitHub Packages
-
-The build can also be found in GitHub Packages, should you prefer to go that route.
-
-## 2. Annotate POJO classes to model database tables.
-
-```
+```java
 import org.gserve.reflectdb.annotations.*;
 
 @ReflectDBTable(tableName = "PEOPLE")
@@ -81,9 +45,9 @@ public class Person {
 }
 ```
 
-## 3. Create and configure an instance of `ReflectDB`
+## 2. Create and configure an instance of `ReflectDB`
 
-```
+```java
 import org.gserve.reflectdb.ReflectDB;
 
 public class TestReflectDB {
@@ -101,9 +65,9 @@ public class TestReflectDB {
 }
 ```
 
-## 4. Almost all functionality is available from `ReflectDB` instance
+## 3. Almost all functionality is available from `ReflectDB` instance
 
-```
+```java
 public void myFunction(ReflectDB reflectDB) {
   reflectDB.createTablesIfNotExists();    // Creates database tables based off of your model classes
   reflectDB.insert(new Person(1, "John", "Smith", "")); // Insert a row into database
@@ -123,7 +87,7 @@ public void myFunction(ReflectDB reflectDB) {
 }
 ```
 
-### 5. Recap
+### 4. Recap
 1. Instantiate `ReflectDB`
 2. Call `ReflectDB.initialize(config)`
 3. Call `ReflectDB.addModelClass()` to add tables.
